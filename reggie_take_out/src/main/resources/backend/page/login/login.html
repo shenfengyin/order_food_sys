@@ -101,7 +101,7 @@
               this.loading = true
               let res = await loginApi(this.loginForm)
               if (String(res.code) === '1') {//1表示登录成功
-                localStorage.setItem('userInfo',JSON.stringify(res.data))
+                localStorage.setItem('userInfo',JSON.stringify(res.data)) //保存在浏览器中（以map形式
                 window.location.href= '/backend/index.html'
               } else {
                 this.$message.error(res.msg)

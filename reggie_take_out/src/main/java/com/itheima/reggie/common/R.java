@@ -19,6 +19,7 @@ public class R<T> {
 
     private Map map = new HashMap(); //动态数据
 
+    //调用静态方法直接new出是否成功的对象
     public static <T> R<T> success(T object) {
         R<T> r = new R<T>();
         r.data = object;
