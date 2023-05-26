@@ -81,21 +81,19 @@ public class EmployeeController {
     public R<String> save(HttpServletRequest request,@RequestBody Employee employee){
         log.info("新增员工，员工信息：{}",employee.toString());
 
-        //设置初始密码123456，需要进行md5加密处理
+        //1.设置初始密码123456，要进行md5加密
         employee.setPassword(DigestUtils.md5DigestAsHex("123456".getBytes()));
-
-        employee.setCreateTime(LocalDateTime.now());
-        employee.setUpdateTime(LocalDateTime.now());
-
-        //获得当前登录用户的id
+        //2.谁进行设置、更新的；以及创建、更新时间
+        //首先获得当前登录用户的id（即谁创建的
         Long empId = (Long) request.getSession().getAttribute("employee");
-
         employee.setCreateUser(empId);
         employee.setUpdateUser(empId);
-
+        employee.setCreateTime(LocalDateTime.now());
+        employee.setUpdateTime(LocalDateTime.now());
+        //3.save进数据库
         employeeService.save(employee);
-
-        return R.success("新增员工成功");
+        //4.返回结果
+        return R.success("新建员工成功");
     }
 
     /**
@@ -108,25 +106,22 @@ public class EmployeeController {
     @GetMapping("/page")
     public R<Page> page(int page,int pageSize,String name){
         log.info("page = {},pageSize = {},name = {}" ,page,pageSize,name);
-
-        //构造分页构造器
-        Page pageInfo = new Page(page,pageSize);
-
-        //构造条件构造器
-        LambdaQueryWrapper<Employee> queryWrapper = new LambdaQueryWrapper();
-        //添加过滤条件
-        queryWrapper.like(StringUtils.isNotEmpty(name),Employee::getName,name);
-        //添加排序条件
+        //分页构造器
+        Page pageInfo = new Page(page, pageSize);
+        //查询构造器
+        LambdaQueryWrapper<Employee> queryWrapper = new LambdaQueryWrapper<>();
+        //添加过滤条件、排序条件          ；like查询（get请求中name是否为空）
+        queryWrapper.like(StringUtils.isNotEmpty(name), Employee::getName, name);
         queryWrapper.orderByDesc(Employee::getUpdateTime);
-
         //执行查询
-        employeeService.page(pageInfo,queryWrapper);
-
+        employeeService.page(pageInfo, queryWrapper);
         return R.success(pageInfo);
     }
 
     /**
      * 根据id修改员工信息
+     * 直接在前端改了，封装好了传给后端
+     * 特别的，关于禁用、启用，前端直接三元运算符对status封装了，后端只需要更新修改人和时间就行
      * @param employee
      * @return
      */

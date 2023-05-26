@@ -7,7 +7,7 @@ import org.springframework.boot.web.servlet.ServletComponentScan;
 
 @Slf4j
 @SpringBootApplication
-@ServletComponentScan
+@ServletComponentScan  //扫描过滤器等等注解
 public class ReggieApplication {
     public static void main(String[] args) {
         SpringApplication.run(ReggieApplication.class,args);

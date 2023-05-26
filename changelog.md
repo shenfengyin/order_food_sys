@@ -1,16 +1,20 @@
-package com.itheima.reggie.filter;
+# 员工登录
 
-import com.alibaba.fastjson.JSON;
-import com.itheima.reggie.common.R;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.util.AntPathMatcher;
 
-import javax.servlet.*;
-import javax.servlet.annotation.WebFilter;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 
+
+
+# 员工管理
+
+> 当前分支user_manager
+
+## 1.解决能直接访问localhost:8080/backend/index.html的问题
+
+过滤器实现
+
+![1685032745722](changelog.assets/1685032745722.png)
+
+```java
 /**
  * 检查用户是否已经完成登录
  */
@@ -80,3 +84,18 @@ public class LoginCheckFilter implements Filter{
         return false;
     }
 }
+```
+
+2.实现员工添加
+
+3.完善异常处理器
+
+4.员工信息分页查询
+
+分页配置类+分页查询方法
+
+5.禁用、启用员工账号
+
+问题：js对long形数据处理丢失精度，导致提交的id和数据库的id不一致
+
+![image-20230526014652682](changelog.assets/image-20230526014652682.png)
