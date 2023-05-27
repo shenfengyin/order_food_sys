@@ -99,3 +99,15 @@ public class LoginCheckFilter implements Filter{
 问题：js对long形数据处理丢失精度，导致提交的id和数据库的id不一致
 
 ![image-20230526014652682](changelog.assets/image-20230526014652682.png)
+
+
+
+
+
+分类管理
+
+1.自动填充
+
+2.新增分类（菜品分类、套餐分类
+
+删除分类，功能完善

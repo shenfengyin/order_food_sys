@@ -87,7 +87,13 @@ Employee emp = employeeService.getOne(queryWrapper);
 
 ### queryWrapper是mybatis plus中实现查询的对象封装操作类。
 
-上述代码：1.新建一个querywrapper对象（类型为Employee，即要查找的实体数据） 2.第二行是要Employee对象对应的数据库表中的username列，是否等于employee#name 3.入参为querywrapper（新建好的查询对象封装类
+上述代码：
+
+1.新建一个querywrapper对象（类型为Employee，即要查找的实体数据）；可以querywrapper当成SQL语句理解
+
+ 2.第二行是要Employee对象对应的数据库表中的username列，是否等于employee#name 
+
+3.入参为querywrapper（新建好的查询对象封装类
 
 # 改进
 
@@ -117,7 +123,7 @@ String[] urls = new String[]{
 
 ——》
 
-使用**过滤器**或者拦截器实现
+### 使用**过滤器**或者拦截器实现
 
 ```
 filterChain.doFilter(request,response);
@@ -240,3 +246,30 @@ import lombok.Data;
 - equals方法
 
 ![img](takeaway%E5%AD%A6%E4%B9%A0%E7%9F%A5%E8%AF%86%E7%82%B9.assets/format,png.png)
+
+
+
+
+
+
+
+
+
+## mybatisplus公共字段填充——插入或者更新的时候为指定字段赋予指定的值，避免重复代码
+
+1.加入@TableField注解，指定自动填充策略
+
+2.按照框架要求编写元数据对象处理器，在此类中统一为公共字段赋值，此类需要实现MetaObjectHandle接口
+
+
+
+为了让updateUser能传入自动updateFill方法中（本身无法调用session），需要借助TheadLocal：
+
+
+
+同一个连接的各种请求是由服务器端的一个线程完成的
+
+1.LoginCheckFilter的doFilter方法 2.EmployeeController的updata方法 3.MyMetaObjectHandler的updataFill方法
+
+
+

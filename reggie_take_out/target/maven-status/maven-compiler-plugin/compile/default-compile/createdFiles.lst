@@ -1,0 +1,16 @@
+com\itheima\reggie\entity\Category.class
+com\itheima\reggie\common\MyMetaObjecthandler.class
+com\itheima\reggie\service\impl\CategoryServiceImpl.class
+com\itheima\reggie\common\CustomException.class
+com\itheima\reggie\service\impl\DishServiceImpl.class
+com\itheima\reggie\service\DishService.class
+com\itheima\reggie\mapper\CategoryMapper.class
+com\itheima\reggie\mapper\DishMapper.class
+com\itheima\reggie\entity\Dish.class
+com\itheima\reggie\entity\Setmeal.class
+com\itheima\reggie\controller\CategoryController.class
+com\itheima\reggie\service\impl\SetmealServiceImpl.class
+com\itheima\reggie\service\SetmealService.class
+com\itheima\reggie\common\BaseContext.class
+com\itheima\reggie\mapper\SetmealMapper.class
+com\itheima\reggie\service\CategoryService.class
