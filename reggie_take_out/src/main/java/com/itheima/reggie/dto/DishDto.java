@@ -6,7 +6,6 @@ import lombok.Data;
 import java.util.ArrayList;
 import java.util.List;
 
-//DTO数据传输对象：接收前端传过来的数据
 @Data
 public class DishDto extends Dish {
 
