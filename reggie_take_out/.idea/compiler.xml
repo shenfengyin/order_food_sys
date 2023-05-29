@@ -10,10 +10,19 @@
         <module name="reggie_take_out" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="mybatis-demo" target="1.8" />
+      <module name="mybatis_plus_datasource" target="1.8" />
+      <module name="mybatisplus" target="1.8" />
+      <module name="stream-demo" target="1.8" />
+    </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="mybatis_plus_datasource" options="-parameters" />
+      <module name="mybatisplus" options="-parameters" />
       <module name="reggie_take_out" options="-parameters" />
+      <module name="stream-demo" options="" />
     </option>
   </component>
 </project>
