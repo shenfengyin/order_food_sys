@@ -1,7 +1,6 @@
 package com.itheima.reggie.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.itheima.reggie.common.R;
 import com.itheima.reggie.dto.SetmealDto;
@@ -110,44 +109,20 @@ public class SetmealController {
         return R.success("套餐数据删除成功");
     }
 
+    /**
+     * 根据条件查询套餐数据
+     * @param setmeal
+     * @return
+     */
     @GetMapping("/list")
-    public R<List<Setmeal>> list(Setmeal setmeal) {
-        log.info("setmeal:{}", setmeal);
-        //条件构造器
+    public R<List<Setmeal>> list(Setmeal setmeal){
         LambdaQueryWrapper<Setmeal> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.like(StringUtils.isNotEmpty(setmeal.getName()), Setmeal::getName, setmeal.getName());
-        queryWrapper.eq(null != setmeal.getCategoryId(), Setmeal::getCategoryId, setmeal.getCategoryId());
-        queryWrapper.eq(null != setmeal.getStatus(), Setmeal::getStatus, setmeal.getStatus());
+        queryWrapper.eq(setmeal.getCategoryId() != null,Setmeal::getCategoryId,setmeal.getCategoryId());
+        queryWrapper.eq(setmeal.getStatus() != null,Setmeal::getStatus,setmeal.getStatus());
         queryWrapper.orderByDesc(Setmeal::getUpdateTime);
 
-        return R.success(setmealService.list(queryWrapper));
-    }
+        List<Setmeal> list = setmealService.list(queryWrapper);
 
-    /**
-    * Description: 套餐停售、启售
-    * date: 2023/5/29 20:50
-    * @author: sfy
-    */
-    @PostMapping("/status/0")
-    public R<String> discontinue(@RequestParam List<Long> ids) {
-        log.info("ids: {}", ids);
-
-        LambdaUpdateWrapper<Setmeal> objectLambdaUpdateWrapper = new LambdaUpdateWrapper<>();
-        objectLambdaUpdateWrapper.in(Setmeal::getId, ids)
-                .set(Setmeal::getStatus, 0);
-        setmealService.update(objectLambdaUpdateWrapper);
-        return R.success("停售成功");
-    }
-
-
-    @PostMapping("/status/1")
-    public R<String> launch(@RequestParam List<Long> ids) {
-        log.info("ids: {}", ids);
-
-        LambdaUpdateWrapper<Setmeal> objectLambdaUpdateWrapper = new LambdaUpdateWrapper<>();
-        objectLambdaUpdateWrapper.in(Setmeal::getId, ids)
-                .set(Setmeal::getStatus, 1);
-        setmealService.update(objectLambdaUpdateWrapper);
-        return R.success("启售成功");
+        return R.success(list);
     }
 }
