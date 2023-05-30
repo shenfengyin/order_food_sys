@@ -151,15 +151,16 @@ public class DishController {
     public R<List<DishDto>> list(Dish dish){
         //构造查询条件
         LambdaQueryWrapper<Dish> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(dish.getCategoryId() != null ,Dish::getCategoryId,dish.getCategoryId());
-        //添加条件，查询状态为1（起售状态）的菜品
-        queryWrapper.eq(Dish::getStatus,1);
 
-        //添加排序条件
-        queryWrapper.orderByAsc(Dish::getSort).orderByDesc(Dish::getUpdateTime);
+        //当前分类下，查询状态为1（起售状态）的菜品
+        queryWrapper.eq(dish.getCategoryId() != null ,Dish::getCategoryId,dish.getCategoryId())
+                    .eq(Dish::getStatus,1)
+                    .orderByAsc(Dish::getSort)
+                    .orderByDesc(Dish::getUpdateTime);
 
         List<Dish> list = dishService.list(queryWrapper);
 
+        //Dish-s -> DishDto-s
         List<DishDto> dishDtoList = list.stream().map((item) -> {
             DishDto dishDto = new DishDto();
 

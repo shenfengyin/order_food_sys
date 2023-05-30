@@ -65,6 +65,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Orders> implement
 
         long orderId = IdWorker.getId();//订单号
 
+        //???防止stream流自动使用多线程？flapmap？
         AtomicInteger amount = new AtomicInteger(0);
 
         List<OrderDetail> orderDetails = shoppingCarts.stream().map((item) -> {
