@@ -117,6 +117,8 @@ String[] urls = new String[]{
 
 3.修改admin密码
 
+4.前台登录后，后台可以直接访问（session登录验证放一起了
+
 # 员工管理
 
 ## 解决能直接访问localhost:8080/backend/index.html的问题

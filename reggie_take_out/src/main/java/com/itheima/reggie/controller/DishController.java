@@ -54,7 +54,7 @@ public class DishController {
         //Set keys = redisTemplate.keys("dish_*");
         //redisTemplate.delete(keys);
 
-        //清理某个分类下面的菜品缓存数据
+        //清理某个分类下面的菜品缓存数据(还可以改进清理某个用户的
         String key = "dish_" + dishDto.getCategoryId() + "_1";
         redisTemplate.delete(key);
 
