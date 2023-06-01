@@ -12,16 +12,16 @@ spring:
       master:
         type: com.alibaba.druid.pool.DruidDataSource
         driver-class-name: com.mysql.cj.jdbc.Driver
-        url: jdbc:mysql://192.168.157.128:3306/reggie?characterEncoding=utf-8&useSSL=false
+        url: jdbc:mysql://192.168.138.100:3306/reggie?characterEncoding=utf-8
         username: root
-        password: 123123
+        password: root
       # 从数据源
       slave:
         type: com.alibaba.druid.pool.DruidDataSource
         driver-class-name: com.mysql.cj.jdbc.Driver
-        url: jdbc:mysql://192.168.157.129:3306/reggie?characterEncoding=utf-8&useSSL=false
+        url: jdbc:mysql://192.168.138.101:3306/reggie?characterEncoding=utf-8
         username: root
-        password: 123123
+        password: root
     masterslave:
       # 读写分离配置
       load-balance-algorithm-type: round_robin #轮询
@@ -37,9 +37,9 @@ spring:
   main:
     allow-bean-definition-overriding: true
   redis:
-    host: 192.168.157.128
+    host: 172.17.2.94
     port: 6379
-    password: 123123
+    password: root@123456
     database: 0
   cache:
     redis:
