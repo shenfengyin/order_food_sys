@@ -41,22 +41,6 @@ public class LoginCheckFilter implements Filter{
                 "/user/sendMsg",
                 "/user/login"
         };
-        /**
-        * Description: 处理前后端过滤器分开逻辑
-        * date: 2023/5/31 16:02
-        * @author: sfy
-        */
-        //定义后端url
-        String[] backendUrls = new String[]{
-                "/employee/**",
-                "/dish/save",
-                "/dish/update",
-                "/category/save",
-                "/category/update",
-                "/category/delete",
-                "/setmeal/save",
-                "/setmeal/delete"
-        };
 
         //2、判断本次请求是否需要处理
         boolean check = check(urls, requestURI);
@@ -68,8 +52,8 @@ public class LoginCheckFilter implements Filter{
             return;
         }
 
-        //4-1、判断登录状态(后台登录），如果已登录，则直接放行
-        if(request.getSession().getAttribute("employee") != null && check(backendUrls, requestURI)){
+        //4-1、判断登录状态，如果已登录，则直接放行
+        if(request.getSession().getAttribute("employee") != null){
             log.info("用户已登录，用户id为：{}",request.getSession().getAttribute("employee"));
 
             Long empId = (Long) request.getSession().getAttribute("employee");
@@ -79,10 +63,8 @@ public class LoginCheckFilter implements Filter{
             return;
         }
 
-        //重点：user用户登录且页面不是后台urls才放行
-        //4-2、判断登录状态(用户)，如果已登录，则直接放行
-//        if(request.getSession().getAttribute("user") != null){
-        if(request.getSession().getAttribute("user") != null && !check(backendUrls, requestURI)){
+        //4-2、判断登录状态，如果已登录，则直接放行
+        if(request.getSession().getAttribute("user") != null){
             log.info("用户已登录，用户id为：{}",request.getSession().getAttribute("user"));
 
             Long userId = (Long) request.getSession().getAttribute("user");
@@ -106,7 +88,6 @@ public class LoginCheckFilter implements Filter{
      * @return
      */
     public boolean check(String[] urls,String requestURI){
-        //属于urls,则放回true
         for (String url : urls) {
             boolean match = PATH_MATCHER.match(url, requestURI);
             if(match){
@@ -115,5 +96,4 @@ public class LoginCheckFilter implements Filter{
         }
         return false;
     }
-
 }
