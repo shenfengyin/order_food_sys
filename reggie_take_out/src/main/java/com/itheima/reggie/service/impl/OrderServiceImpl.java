@@ -3,7 +3,7 @@ package com.itheima.reggie.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.IdWorker;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.itheima.reggie.common.BaseContext;
+import com.itheima.reggie.utils.BaseContext;
 import com.itheima.reggie.common.CustomException;
 import com.itheima.reggie.entity.*;
 import com.itheima.reggie.mapper.OrderMapper;

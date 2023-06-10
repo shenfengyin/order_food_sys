@@ -1,6 +1,7 @@
 package com.itheima.reggie.common;
 
 import com.baomidou.mybatisplus.core.handlers.MetaObjectHandler;
+import com.itheima.reggie.utils.BaseContext;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.reflection.MetaObject;
 import org.springframework.stereotype.Component;
@@ -23,7 +24,7 @@ public class MyMetaObjecthandler implements MetaObjectHandler {
 
         metaObject.setValue("createTime", LocalDateTime.now());
         metaObject.setValue("updateTime",LocalDateTime.now());
-        metaObject.setValue("createUser",BaseContext.getCurrentId());
+        metaObject.setValue("createUser", BaseContext.getCurrentId());
         metaObject.setValue("updateUser",BaseContext.getCurrentId());
     }
 
