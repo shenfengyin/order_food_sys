@@ -6,6 +6,7 @@ import com.itheima.reggie.common.R;
 import com.itheima.reggie.entity.SeckillVoucher;
 import com.itheima.reggie.entity.Voucher;
 import com.itheima.reggie.entity.VoucherOrder;
+import com.itheima.reggie.lock.SimpleRedisLock;
 import com.itheima.reggie.mapper.VoucherOrderMapper;
 import com.itheima.reggie.service.SeckillVoucherService;
 import com.itheima.reggie.service.VoucherOrderService;
@@ -13,6 +14,7 @@ import com.itheima.reggie.utils.BaseContext;
 import com.itheima.reggie.utils.RedisIdWorker;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.aop.framework.AopContext;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,7 +32,7 @@ public class VoucherOrderServiceImpl extends ServiceImpl<VoucherOrderMapper, Vou
     @Resource
     private RedisIdWorker redisIdWorker;
     @Resource
-    private StringRedisTemplate stringRedisTemplate;
+    private RedisTemplate redisTemplate;
     @Override
     //    一人一单
     public R<String> seckillVoucher(Long voucherId) {
@@ -52,11 +54,22 @@ public class VoucherOrderServiceImpl extends ServiceImpl<VoucherOrderMapper, Vou
             return R.error("库存不足！");
         }
         Long userId = BaseContext.getCurrentId();
-//        return createVoucherOrder(voucher);
-        synchronized (userId.toString().intern()) {
+        //创建锁对象
+        SimpleRedisLock lock = new SimpleRedisLock("order:" + userId, redisTemplate);
+        //获取锁
+        boolean isLock = lock.tryLock(1200L);
+
+        if(!isLock) {
+            //获取锁失败
+            return R.error("不容许重复下单");
+        }
+
+        try {
             //获取代理对象（事务）
             VoucherOrderService proxy = (VoucherOrderService) AopContext.currentProxy();
             return proxy.createVoucherOrder(voucherId);
+        } finally {
+            lock.unlock();
         }
 
 
