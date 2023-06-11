@@ -54,7 +54,7 @@ public class VoucherOrderServiceImpl extends ServiceImpl<VoucherOrderMapper, Vou
             return R.error("库存不足！");
         }
         Long userId = BaseContext.getCurrentId();
-        //创建锁对象
+        //创建锁对象（以当前用户ID作为key
         SimpleRedisLock lock = new SimpleRedisLock("order:" + userId, redisTemplate);
         //获取锁
         boolean isLock = lock.tryLock(1200L);
