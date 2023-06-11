@@ -9,4 +9,6 @@ import com.itheima.reggie.common.R;
  */
 public interface VoucherOrderService {
     R<String> seckillVoucher(Long voucherId);
+
+    R<String> createVoucherOrder(Long voucherId);
 }

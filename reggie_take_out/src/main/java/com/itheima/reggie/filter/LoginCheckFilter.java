@@ -87,7 +87,7 @@ public class LoginCheckFilter implements Filter{
             //把用户ID放入ThreadLocal中
             BaseContext.setCurrentId(userId);
             //刷新token有效期
-            redisTemplate.expire("login:token:" + token, 30, TimeUnit.MINUTES);
+            redisTemplate.expire("login:token:" + token, 7200, TimeUnit.MINUTES);
             filterChain.doFilter(request,response);
             return;
         }
