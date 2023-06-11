@@ -8,5 +8,5 @@ import com.itheima.reggie.common.R;
  * Description:
  */
 public interface VoucherOrderService {
-    R seckillVoucher(Long voucherId);
+    R<String> seckillVoucher(Long voucherId);
 }

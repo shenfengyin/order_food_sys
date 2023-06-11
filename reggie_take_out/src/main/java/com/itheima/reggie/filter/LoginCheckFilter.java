@@ -4,6 +4,8 @@ import com.alibaba.fastjson.JSON;
 import com.itheima.reggie.utils.BaseContext;
 import com.itheima.reggie.common.R;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.util.AntPathMatcher;
 
 import javax.servlet.*;
@@ -11,6 +13,7 @@ import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.concurrent.TimeUnit;
 
 /**
  * 检查用户是否已经完成登录
@@ -18,6 +21,8 @@ import java.io.IOException;
 @WebFilter(filterName = "loginCheckFilter",urlPatterns = "/*")
 @Slf4j
 public class LoginCheckFilter implements Filter{
+    @Autowired
+    private RedisTemplate redisTemplate;
     //路径匹配器，支持通配符
     public static final AntPathMatcher PATH_MATCHER = new AntPathMatcher();
 
@@ -42,6 +47,7 @@ public class LoginCheckFilter implements Filter{
                 "/user/login",
 
                 "/voucher/**",
+//                "/voucher-order/**",
 
                 "/doc.html",
                 "/webjars/**",
@@ -61,7 +67,7 @@ public class LoginCheckFilter implements Filter{
 
         //4-1、判断登录状态，如果已登录，则直接放行
         if(request.getSession().getAttribute("employee") != null){
-            log.info("用户已登录，用户id为：{}",request.getSession().getAttribute("employee"));
+            log.info("管理员用户已登录，用户id为：{}",request.getSession().getAttribute("employee"));
 
             Long empId = (Long) request.getSession().getAttribute("employee");
             BaseContext.setCurrentId(empId);
@@ -71,12 +77,17 @@ public class LoginCheckFilter implements Filter{
         }
 
         //4-2、判断登录状态，如果已登录，则直接放行
-        if(request.getSession().getAttribute("user") != null){
-            log.info("用户已登录，用户id为：{}",request.getSession().getAttribute("user"));
-
-            Long userId = (Long) request.getSession().getAttribute("user");
+//        if(request.getSession().getAttribute("user") != null){
+        //获取请求头中的token，此时要求前端进行更改
+        String token = request.getHeader("authorization");
+        if(redisTemplate.opsForValue().get("login:token:" + token) != null){
+//            log.info("用户已登录，用户id为：{}",request.getSession().getAttribute("user"));
+//            Long userId = (Long) request.getSession().getAttribute("user");
+            Long userId = (Long) redisTemplate.opsForValue().get("login:token:" + token);
+            //把用户ID放入ThreadLocal中
             BaseContext.setCurrentId(userId);
-
+            //刷新token有效期
+            redisTemplate.expire("login:token:" + token, 30, TimeUnit.MINUTES);
             filterChain.doFilter(request,response);
             return;
         }

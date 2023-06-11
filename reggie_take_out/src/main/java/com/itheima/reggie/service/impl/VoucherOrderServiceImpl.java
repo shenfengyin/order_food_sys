@@ -29,8 +29,8 @@ public class VoucherOrderServiceImpl extends ServiceImpl<VoucherOrderMapper, Vou
     @Resource
     private StringRedisTemplate stringRedisTemplate;
     @Override
-    public R seckillVoucher(Long voucherId) {
-        // 1.查询优惠券
+    public R<String> seckillVoucher(Long voucherId) {
+        // 1.查询优惠券（此时快照了
         SeckillVoucher voucher = seckillVoucherService.getById(voucherId);
         // 2.判断秒杀是否开始
         if (voucher.getBeginTime().isAfter(LocalDateTime.now())) {
@@ -49,10 +49,11 @@ public class VoucherOrderServiceImpl extends ServiceImpl<VoucherOrderMapper, Vou
         }
         //5，扣减库存
 //        boolean success = seckillVoucherService.update()
-//                .setSql("stock= stock -1")
-//                .eq("voucher_id", voucherId).update();
+//                .setSql("stock= stock -1")    //set语句
+//                .eq("voucher_id", voucherId).update();  //where 条件
         boolean success = seckillVoucherService.update()
                 .setSql("stock= stock -1")
+//                .eq("voucher_id", voucherId).eq("stock",voucher.getStock()).update(); //where id = ？ and stock = ?
                 .eq("voucher_id", voucherId).gt("stock",0).update(); //where id = ? and stock > 0
         if (!success) {
             //扣减库存
@@ -70,7 +71,7 @@ public class VoucherOrderServiceImpl extends ServiceImpl<VoucherOrderMapper, Vou
         voucherOrder.setVoucherId(voucherId);
         save(voucherOrder);
 
-        return R.success("");
+        return R.success("success");
 
     }
 }
