@@ -27,7 +27,7 @@ public class SimpleRedisLock implements ILock{
     }
 
 //    private static final String KEY_PREFIX = "lock:";
-    //每台JVM的ID_pre不一样
+    //不同JVM的ID_pre不一样
     //相同的JVM有线程号区分，不同的JVM有uuid区分
     private static final String ID_PREFIX = UUID.randomUUID().toString() + "-";
     private static final DefaultRedisScript<Long> UNLOCK_SCRIPT;
@@ -41,11 +41,19 @@ public class SimpleRedisLock implements ILock{
     @Override
     public boolean tryLock(Long timeoutSec) {
         //获取线程标识
-        //相同的JVM有线程号区分，不同的JVM有uuid区分
-        String threadId = ID_PREFIX + Thread.currentThread().getId();
+        //相同的JVM有线程号区分，不同的JVM有uuid区分(作为value
+        String jvmThreadId = ID_PREFIX + Thread.currentThread().getId();
         Boolean success = redisTemplate.opsForValue()
-                .setIfAbsent("lock:" + name, threadId, timeoutSec, TimeUnit.SECONDS);
+                .setIfAbsent("lock:" + name, jvmThreadId, timeoutSec, TimeUnit.SECONDS);
         return Boolean.TRUE.equals(success);
+
+        /*
+        这里可以实现
+        1.可重入：<k, <jvmThreadId, state>>
+        2.锁重试：while(true) + 订阅锁的释放信息
+        3.超时释放：设置超时时间，但是内部反复重置超时时间，从而保证工作期间不会因为ttl而释放锁，
+        把“因为ttl而释放锁”放在线程结束或者宕机的这个阶段
+         */
     }
 
     @Override

@@ -13,6 +13,8 @@ import com.itheima.reggie.service.VoucherOrderService;
 import com.itheima.reggie.utils.BaseContext;
 import com.itheima.reggie.utils.RedisIdWorker;
 import lombok.extern.slf4j.Slf4j;
+import org.redisson.api.RLock;
+import org.redisson.api.RedissonClient;
 import org.springframework.aop.framework.AopContext;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -33,6 +35,9 @@ public class VoucherOrderServiceImpl extends ServiceImpl<VoucherOrderMapper, Vou
     private RedisIdWorker redisIdWorker;
     @Resource
     private RedisTemplate redisTemplate;
+
+    @Resource
+    private RedissonClient redissonClient;
     @Override
     //    一人一单
     public R<String> seckillVoucher(Long voucherId) {
@@ -55,9 +60,10 @@ public class VoucherOrderServiceImpl extends ServiceImpl<VoucherOrderMapper, Vou
         }
         Long userId = BaseContext.getCurrentId();
         //创建锁对象（以当前用户ID作为key
-        SimpleRedisLock lock = new SimpleRedisLock("order:" + userId, redisTemplate);
+//        SimpleRedisLock lock = new SimpleRedisLock("order:" + userId, redisTemplate);
+        RLock lock = redissonClient.getLock("order:" + userId);
         //获取锁
-        boolean isLock = lock.tryLock(1200L);
+        boolean isLock = lock.tryLock();
 
         if(!isLock) {
             //获取锁失败
