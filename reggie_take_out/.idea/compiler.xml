@@ -7,15 +7,15 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="tiny-spring" />
+        <module name="reggie_take_out" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="mybatis-demo" target="1.8" />
       <module name="mybatis_plus_datasource" target="1.8" />
       <module name="mybatisplus" target="1.8" />
-      <module name="reggie_take_out" target="1.8" />
       <module name="stream-demo" target="1.8" />
+      <module name="tiny-spring" target="1.6" />
     </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
