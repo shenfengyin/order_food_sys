@@ -9,7 +9,7 @@ import com.itheima.reggie.mapper.VoucherMapper;
 import com.itheima.reggie.service.SeckillVoucherService;
 import com.itheima.reggie.service.VoucherService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -25,7 +25,7 @@ public class VoucherServiceImpl extends ServiceImpl<VoucherMapper, Voucher> impl
     @Autowired
     private SeckillVoucherService seckillVoucherService;
     @Autowired
-    private StringRedisTemplate stringRedisTemplate;
+    private RedisTemplate redisTemplate;
     public void addSeckillVoucher(Voucher voucher) {
         // 保存优惠券
         save(voucher);
@@ -37,7 +37,7 @@ public class VoucherServiceImpl extends ServiceImpl<VoucherMapper, Voucher> impl
         seckillVoucher.setEndTime(voucher.getEndTime());
         seckillVoucherService.save(seckillVoucher);
         // 保存秒杀库存到Redis中
-        stringRedisTemplate.opsForValue().set("seckill:stock:" + voucher.getId(), voucher.getStock().toString());
+        redisTemplate.opsForValue().set("seckill:stock:" + voucher.getId(), voucher.getStock().toString());
     }
 
 
